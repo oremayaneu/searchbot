@@ -1,8 +1,8 @@
 // LINE Messaging APIのチャネルアクセストークン
-var LINE_ACCESS_TOKEN = "bQMtf+MIR2Px412iPNZ9aVhUi2V4rwavtcXW6+0qEOr7+7lgIhMgQkJngat6zPxfMG6nH6f70FdNLTo7yTPHnJUuojsT32ya79jRT0PtjSyer+p8SV/bElPpm030CPOYkih9AjJ5xcuJl9v0p5DYkwdB04t89/1O/w1cDnyilFU=";
+// var LINE_ACCESS_TOKEN = " ";
 
 // スプレッドシートID
-var ss = SpreadsheetApp.openById("1L1P3QLbbTgd4gmRcNVE4HQ5kZyITeyrkEi3MAoGbAyo");
+var ss = SpreadsheetApp.openById(" ");
 
 // シート名
 var sh = ss.getSheetByName("フォームの回答1");
