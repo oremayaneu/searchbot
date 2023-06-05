@@ -1,5 +1,5 @@
 // LINE Messaging APIのチャネルアクセストークン
-// var LINE_ACCESS_TOKEN = " ";
+var LINE_ACCESS_TOKEN = " ";
 
 // スプレッドシートID
 var ss = SpreadsheetApp.openById(" ");
@@ -35,7 +35,7 @@ function replyFromSheet(data) {
   var replyUrl = "https://api.line.me/v2/bot/message/reply";
   
   // 受信したメッセージ情報を変数に格納する
-  var replyToken　= data.events[0].replyToken; // reply token
+  var replyToken = data.events[0].replyToken; // reply token
   var postMsg = data.events[0].message.text; // ユーザーが送信した語句 
   
   // ここまで基本設定
@@ -73,34 +73,54 @@ function replyFromSheet(data) {
   replyText = replyText + "\n________________________" + reply;  // 外枠に作成したreplyを追加
   
   
-  var muse = "高坂穂乃果園田海未南ことり小泉花陽星空凛西木野真姫絢瀬絵里東條希矢澤にこ";
-  var aqours = "高海千歌桜内梨子渡辺曜黒澤ルビィ国木田花丸津島善子小原鞠莉黒澤ダイヤ松浦果南";
-  var niji = "高咲侑上原歩夢宮下愛優木せつ菜中須かすみ桜坂しずく天王寺璃奈エマヴェルデ近江彼方朝香果林三船栞子鐘嵐珠ミアテイラー";
-  var liella = "澁谷かのん嵐千砂都平安名すみれ唐可可葉月恋桜小路きな子米女メイ若菜四季鬼塚夏美ウィーンマルガレーテ";
+  var muse = ["高坂穂乃果","園田海未","南ことり","小泉花陽","星空凛","西木野真姫","絢瀬絵里","東條希","矢澤にこ"];
+  var aqours = ["高海千歌","桜内梨子","渡辺曜","黒澤ルビィ","国木田花丸","津島善子","小原鞠莉","黒澤ダイヤ","松浦果南"];
+  var niji = ["高咲侑","上原歩夢","宮下愛","優木せつ菜","中須かすみ","桜坂しずく","天王寺璃奈","エマヴェルデ","近江彼方","朝香果林","三船栞子","鐘嵐珠","ミアテイラー"];
+  var liella = ["澁谷かのん","嵐千砂都","平安名すみれ","唐可可","葉月恋","桜小路きな子","米女メイ","若菜四季","鬼塚夏美","ウィーンマルガレーテ"];
   
   // 入力に基づき、どのグループの箱推しを検出するか決定
   
   var group = 1;  // 初期値
-  var check1=muse.indexOf(postMsg);  // 入力がmuseメンバーと一致
-  if(check1 > -1){
-    group = 7;  // μ’sは7行目と教える
-    var group_n = "μ’s";  // group name = μ’s
+  var group_n = "";
+
+
+  muse.forEach(chara_name => {
+    if (chara_name.indexOf(postMsg) > -1) { // 検索ワードを含む要素を発見したらμ’s
+        group = 7;  // μ’sは7行目と教える
+        group_n = "μ’s";  // group name = μ’s
+    }
+  });
+
+  // group未定なら次はAqoursを探索
+  if (group === 1) {
+    aqours.forEach(chara_name => {
+      if (chara_name.indexOf(postMsg) > -1) {
+          group = 8;
+          group_n = "Aqours";
+      }
+    });
   }
-  var check2=aqours.indexOf(postMsg);  // 入力がaqoursメンバーと一致
-  if(check2 > -1){
-    group = 8;
-    var group_n = "Aqours";  //group name = Aqours
+
+  // group未定なら次は虹ヶ咲を探索
+  if (group === 1) {
+    niji.forEach(chara_name => {
+      if (chara_name.indexOf(postMsg) > -1) {
+          group = 9;
+          group_n = "虹ヶ咲";
+      }
+    });
   }
-  var check3=niji.indexOf(postMsg);  //入力がnijiメンバーと一致
-  if(check3 > -1){
-    group = 9;
-    var group_n = "虹ヶ咲";  // group name = 虹ヶ咲
+
+  // group未定なら次はLiellaを探索
+  if (group === 1) {
+    liella.forEach(chara_name => {
+      if (chara_name.indexOf(postMsg) > -1) {
+          group = 10;
+          group_n = "Liella!";
+      }
+    });
   }
-  var check4=liella.indexOf(postMsg);  // 入力がliellaメンバーと一致
-  if(check4 > -1){
-    group = 10;
-    var group_n = "Liella!";  // group name = Liella!
-  }
+
   
   if(group > 6){  // どれかのグループに属していれば7以上なのでスルー
     var finder_g = sheet.getRange(2, group, Row, 1).createTextFinder("箱推し").useRegularExpression(true);  // 教えてもらったグループ（列）内で箱推しの人を発見
